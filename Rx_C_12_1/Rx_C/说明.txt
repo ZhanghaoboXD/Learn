@@ -1,0 +1,7 @@
+译码由rtl改C，其余由C++改C
+main函数中的 rxLen 需要从发送端得知
+decPayload函数中的 g_tp680Para.rx_NumBit 需要从发送端得知
+decShrPhrSeq函数中的 g_tp680Para.rx_I_zc,g_tp680Para.rx_L_numOfGroup 需要从发送端得知
+decodeCC函数第一个参数为码率rate，0：1/2，1：2/3，2：3/4。
+
+修正频偏需要查表量化，暂时还没做量化
