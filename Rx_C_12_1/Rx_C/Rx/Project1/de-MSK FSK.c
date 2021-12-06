@@ -109,7 +109,7 @@ void deMskFsk(dcomplex* pIn, double* pOutNRZ, int outBitLen, int type)
 		// 0/1 相差软判决
 		pOutNRZ[j] = getPower(&tempSamp[0]) - getPower(&tempSamp[1]);
 		//移位11bit 16->5
-		pOutNRZ[j] = (int)pOutNRZ[j] >> 9;//理论应该11bit，但实际貌似10bit就够
+		pOutNRZ[j] = (int)pOutNRZ[j] >> 11;//理论应该11bit，但实际貌似10bit就够
 		//if (fabs(pOutNRZ[j]) > 63)
 		//	printf("%d %f\n", j, pOutNRZ[j]);
 		// 0/1 直接软判决

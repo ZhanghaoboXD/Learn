@@ -416,6 +416,10 @@ int main()
 {
 	initGlobalPara(); // 选MSK还是QPSK需要更改参数
 
+	int SHR_SAMP_LEN = 2048;
+	int PAYLOAD_SAMP_OFF = 12288;
+	int txSampOff = 36864;   //接收数据长度, 由发送端得知     测试1/2码率 MSK:61440 QPSK:36864
+
 	FILE* fp = NULL;
 	if (g_tp680Para.modType == 0)
 	{
@@ -441,7 +445,7 @@ int main()
 		return -1;
 	}
 
-	for (int i = 0; i < 36864; i++)  //MSK:61440 QPSK:36864
+	for (int i = 0; i < txSampOff; i++)  //MSK:61440 QPSK:36864
 	{
 		for (int j = 0; j < 2; j++)
 		{
@@ -450,15 +454,11 @@ int main()
 	}
 	fclose(fp);
 
-	for (int i = 0; i < 36864; i++)  //MSK:61440 QPSK:36864
+	for (int i = 0; i < txSampOff; i++)  //MSK:61440 QPSK:36864
 	{
 		simTxSeq[i].x = tmp[i][0];
 		simTxSeq[i].y = tmp[i][1];
 	}
-
-	int SHR_SAMP_LEN = 2048;
-	int PAYLOAD_SAMP_OFF = 12288;
-	int txSampOff = 36864;   //接收数据长度, 由发送端得知     测试1/2码率 MSK:61440 QPSK:36864
 
 	g_txDataSamp = (dcomplex*)malloc((txSampOff - PAYLOAD_SAMP_OFF) * sizeof(dcomplex));
 	for (int i = 0; i < txSampOff - PAYLOAD_SAMP_OFF; i++)
@@ -491,7 +491,7 @@ int main()
 	{
 		int error = 0;
 		double BER = 0;
-		for (double frame_num = 1; frame_num <= 1000; frame_num++)
+		for (double frame_num = 1; frame_num <= 1; frame_num++)
 		{
 			doFading(rxAirSamp, simTxSeq, SNR, txSampOff);
 			//printf("SNR = %f\n", SNR);

@@ -42,7 +42,7 @@ void Complex_Batch_Guass(dcomplex* Out, double noisePower, int dataLen)
     }
 }
 
-void batchAdd(dcomplex* output, const dcomplex* in0, const dcomplex* in1, int size)
+void batchAdd(dcomplex* output, dcomplex* in0, const dcomplex* in1, int size)
 {
 
     for (int i = 0; i < size; ++i)
@@ -51,6 +51,18 @@ void batchAdd(dcomplex* output, const dcomplex* in0, const dcomplex* in1, int si
         output[i].x = (int)output[i].x;
         output[i].y = (int)output[i].y;
     }
+}
+
+double getPowerSummary(dcomplex* input, int size)
+{
+    double sum = 0;
+
+    for (int i = 0; i < size; ++i)
+    {
+        sum += getPower(&input[i]);
+    }
+
+    return sum;
 }
 
 void doFading(dcomplex* pRxOut, dcomplex* pTxIn, double SNR, int numOfSamp)
@@ -75,6 +87,12 @@ void doFading(dcomplex* pRxOut, dcomplex* pTxIn, double SNR, int numOfSamp)
     }
 
     Complex_Batch_Guass(m_awgn_per_sinr, noisePower, numOfSamp);
+
+    //double a = getPowerSummary(tmpTxIn, numOfSamp);
+    //double b = getPowerSummary(m_awgn_per_sinr, numOfSamp);
+    //double c = 10 * log10(a / b);
+    //printf("%f\n", c);
+
     batchAdd(pRxOut, tmpTxIn, m_awgn_per_sinr, numOfSamp);
     for (int i = 0; i < numOfSamp; i++)
     {
@@ -95,6 +113,7 @@ void doFading(dcomplex* pRxOut, dcomplex* pTxIn, double SNR, int numOfSamp)
         {
             pRxOut[i].y = -511;
         }
+        //printf("%f  %f\n", m_awgn_per_sinr[i].x, m_awgn_per_sinr[i].y);
     }
 
     free(m_awgn_per_sinr);
